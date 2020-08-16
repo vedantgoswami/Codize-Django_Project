@@ -1,0 +1,121 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Quiz Start</title>
+	<link rel="stylesheet" type="text/css" href="{% static 'css/quizcss.css' %}">
+	<link rel="stylesheet" type="text/css" href="{% static 'css/quizcss.css' %}">
+</head>
+<body>
+	<div class="wrapper">
+		<div class="quiz">
+			<div class="quiz_header">
+				<div class="quiz_user">
+					<h4>Welcome! {{user.username}}</h4>
+				</div>
+				<div class="quiz_timer">
+					<span style="font-weight: bold;font-family: 'Lato';" class="time">00:00</span>
+				</div>
+			</div>
+			<div class="quiz_body">
+				{% for q in ques %}
+				<h2>Q{{q.id}}. {{q.ques}}</h2>
+				
+				<img src="{{q.img.url}}">
+				
+				<ul class="option_group" id="test{{q.id}}" style="margin-bottom: 5cm">
+					<li class="option" id="{{q.id}}1">{{q.opt1}}</li>
+					<li class="option" id="{{q.id}}2">{{q.opt2}}</li>
+					<li class="option" id="{{q.id}}3">{{q.opt3}}</li>
+					<li class="option" id="{{q.id}}4">{{q.opt4}}</li>
+				</ul>
+
+				{% endfor %}
+				<form name="myform" action="get_data" method="POST">
+					{% csrf_token %}
+				<input style="color: transparent; background-color: transparent; border: transparent;" type="text" name="answer" id="answer" ><br>
+				<input style="color: transparent; background-color: transparent; border: transparent;" type="text" name="user" id="user" value="{{user.username}}"><br>
+				<button class="btn-next" onclick="submit()" >Submit</button>
+				</form>
+				
+			</div>
+		</div>
+	</div>
+	<script type="text/javascript">
+		function getEventTarget(e) {
+    e = e || window.event;
+    return e.target || e.srcElement; 
+	}
+	
+	{% for q in ques %}
+	var ul = document.getElementById("test{{q.id}}");
+	ul.onclick = function(event) {
+	    var target = getEventTarget(event);
+	    let q_id=parseInt(target.id/10);
+	    console.log(q_id);
+	    var ans=[];
+	    for (let i=1;i<=4;i++){
+	    	var x=q_id.toString();
+	    	var z=i.toString();
+	    	var y=x.concat(z);
+	    	if (y==target.id){
+	    		$("#".concat(y)).toggleClass('active');
+	    		var p=q_id.toString();	
+	    	}
+	    	else{
+
+	    		$("#".concat(y)).removeClass('active');
+	    	}
+	    	
+	    	
+	    	
+	    	
+	    }
+	    {% for q in ques %}
+		z={{q.id}};
+		p=z.toString();
+		for (let i=1;i<=4;i++){
+			let q=i.toString();
+			let r=p.concat(q);
+			if ($("#".concat(r)).hasClass('active')){
+				ans.push(r);
+			}
+		}
+		{% endfor  %}
+	    var inputF = document.getElementById("answer");
+		var val=ans.toString();
+		inputF.value=ans.toString();
+
+	};
+	{% endfor %}
+	let dt=new Date(new Date().setTime(0));
+	let time=dt.getTime();
+	let seconds = Math.floor((time%(100*60))/1000);
+	let minutes = Math.floor((time%(1000*60*60))/(1000*60));
+	let timex=0;
+
+	setInterval(function(){
+		if(seconds<59)
+			seconds++;
+		else{
+			minutes++;
+			if(minutes>=10)
+				document.myform.submit();
+			seconds=0;
+		}
+
+		let formatted_sec = seconds < 10 ? `0${seconds}`: `${seconds}`;
+        let formatted_min = minutes < 10 ? `0${minutes}`: `${minutes}`
+        document.querySelector("span.time").innerHTML = `${formatted_min} : ${formatted_sec}`;
+	},1000);
+	function submit(){
+		
+
+	};
+	</script>
+	<script src="{% static 'vendor/jquery/jquery-3.2.1.min.js' %}"></script>
+
+	<script type="text/javascript" src="{% static 'js/quiz.js' %}"></script>
+
+</body>
+</html>

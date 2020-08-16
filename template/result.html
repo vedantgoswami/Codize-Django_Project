@@ -1,0 +1,121 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Result</title>
+	<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<link href="{% static 'fonts/font-awesome-4.7.0/css/font-awesome.min.css'%}" rel="stylesheet" type="text/css">
+
+	<link href="https://fonts.googleapis.com/css2?family=Lato&display=swap" rel="stylesheet">
+	<link rel="stylesheet" type="text/css" href="{% static 'css/quizcss.css' %}">
+	
+	<style type="text/css">
+
+
+		.marks{
+		margin-top: 5px;
+		font-family: 'Lato';
+		font-size: 50px;
+		font-weight: bold;
+		color: #341f97;
+		display: flex;
+		text-align: center;	
+		justify-content: space-between;
+		padding-right: 10px;
+	}
+
+		.correct{
+	background-color: limegreen;
+	color: #fff !important;
+}
+.log-btn{
+	background-color: #341f97;
+	border-radius: 50px;
+	color:#fff;
+	font-size: 25px;
+	display: flex;
+	width: 120px;
+	height: 70px;
+	align-items: center;
+	padding-left: 20px;
+	box-shadow: 2px 2px 5px 1px rgba(0, 0, 0, 0.3);
+}
+.log-btn:hover{
+	box-shadow: 3px 3px 3px 3px rgba(0, 0, 0, 0.5);
+	cursor: pointer;
+}
+.award_icon{
+	font-size: 50px;
+	text-align: center;
+	color: blue;
+	text-align: center;
+}
+.log-btn a{
+	text-decoration: none;
+	color: #fff;
+}
+.center {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  height: 130px;
+  width: 130px;
+  color: blue;
+}
+	</style>
+
+
+
+</head>
+<body>
+	<div class="marks">
+        <img class="logo_head" src="{% static 'images/black_logo.png' %}" width="150px" height="150px">
+		<div class="log-btn"><a href="logout">Logout</a></div>
+	</div>
+	<h1 style="text-align: center ;color: #341f97">Well Done! <b>{{user.username}}</b></h1>
+	<p style="text-align: center;font-weight: bold ;font-size: 40px ;color: #341f97; font-family: 'Lato'; text-shadow: 1px 2px #341f97"><span style="color: limegreen">{{marks}}</span>  Out   of  {{total}}</p>
+	<img class="center" src="{% static 'images/medal.png' %}">
+		<div class="wrapper">
+
+		<div class="quiz">
+
+			<div class="quiz_header">
+				<div class="quiz_user">
+
+					<h3>Welcome! {{user.username}}</h3>
+				</div>
+				
+			</div>
+			<div class="quiz_body">
+				{% for q in ques %}
+				<h2>Q{{q.id}}. {{q.ques}}</h2>
+				
+				<img src="{{q.img.url}}">
+				
+				<ul class="option_group" id="test{{q.id}}" style="margin-bottom: 5cm">
+					<li class="option" id="{{q.id}}1">{{q.opt1}}</li>
+					<li class="option" id="{{q.id}}2">{{q.opt2}}</li>
+					<li class="option" id="{{q.id}}3">{{q.opt3}}</li>
+					<li class="option" id="{{q.id}}4">{{q.opt4}}</li>
+				</ul>
+
+				{% endfor %}
+				
+				
+			</div>
+		</div>
+	</div>
+	<script src="{% static 'vendor/jquery/jquery-3.2.1.min.js' %}"></script>
+	<script>
+		{% for q in ques %}
+		z={{q.id}};
+		x={{q.corr}};
+		p=z.toString();
+		q=z.toString();
+		r=p.concat(q);
+		$("#".concat(r)).toggleClass('correct');
+		{% endfor %}
+	</script>
+</body>
+</html>
